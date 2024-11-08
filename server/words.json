@@ -1,0 +1,102 @@
+[
+  {
+    "word": "hello",
+    "team": "red"
+  },
+  {
+    "word": "world",
+    "team": "blue"
+  },
+  {
+    "word": "goodbye",
+    "team": "white"
+  },
+  {
+    "word": "sun",
+    "team": "white"
+  },
+  {
+    "word": "moon",
+    "team": "black"
+  },
+  {
+    "word": "star",
+    "team": "red"
+  },
+  {
+    "word": "planet",
+    "team": "blue"
+  },
+  {
+    "word": "galaxy",
+    "team": "white"
+  },
+  {
+    "word": "comet",
+    "team": "red"
+  },
+  {
+    "word": "asteroid",
+    "team": "blue"
+  },
+  {
+    "word": "meteor",
+    "team": "white"
+  },
+  {
+    "word": "nebula",
+    "team": "red"
+  },
+  {
+    "word": "quasar",
+    "team": "blue"
+  },
+  {
+    "word": "pulsar",
+    "team": "white"
+  },
+  {
+    "word": "blackhole",
+    "team": "red"
+  },
+  {
+    "word": "supernova",
+    "team": "blue"
+  },
+  {
+    "word": "cosmos",
+    "team": "white"
+  },
+  {
+    "word": "universe",
+    "team": "red"
+  },
+  {
+    "word": "orbit",
+    "team": "blue"
+  },
+  {
+    "word": "gravity",
+    "team": "white"
+  },
+  {
+    "word": "telescope",
+    "team": "red"
+  },
+  {
+    "word": "satellite",
+    "team": "blue"
+  },
+  {
+    "word": "spaceship",
+    "team": "white"
+  },
+  {
+    "word": "astronaut",
+    "team": "red"
+  },
+  {
+    "word": "rocket",
+    "team": "blue"
+  }
+]

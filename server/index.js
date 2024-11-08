@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const cors = require('cors');
 const { Server } = require('socket.io');
+const { readFile } = require('fs/promises');
 
 const app = express();
 app.use(cors());
@@ -77,13 +78,11 @@ io.on("connection", (socket) => {
   });
 
   socket.on("start_game", async (data) => {
-    console.log("COMEÇOOOUUUU");
+    const file = await readFile("./words.json", "utf-8");
+    const words = JSON.parse(file);
 
-    const sockets = await socket.in(data.roomId).fetchSockets();
-    const users = sockets.map(s => ({ name: s.data.name, id: s.id, team: s.data.team, teamMaster: s.data.teamMaster }));
-    users.push({ name: socket.data.name, id: socket.id, team: socket.data.team, teamMaster: socket.data.teamMaster});
-
-    console.log(users);
+    socket.emit("game_started", words);
+    socket.to(data.roomId).emit("game_started", words);
   });
 });
 

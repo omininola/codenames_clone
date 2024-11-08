@@ -24,7 +24,7 @@ export default function RoomPage(){
   }, [roomId, name]);
 
   return (
-    <main className="max-w-6xl mx-auto p-4">
+    <main className="max-w-7xl mx-auto p-4">
       <div className="flex items-center justify-between border-b-2 mb-4">
         <h1 className="text-2xl font-semibold my-4">Sala: {roomId}</h1>
         
@@ -43,7 +43,7 @@ export default function RoomPage(){
         </div>
       </div>
 
-      <div className="flex justify-between">
+      <div className="flex items-start justify-between gap-4">
         <Team team="blue" roomId={roomId} />
         <Board />
         <Team team="red" roomId={roomId} />

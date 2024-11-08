@@ -21,7 +21,7 @@ export default function Team({ team, roomId }: TeamProps) {
   const [players, setPlayers] = useState<PlayerType[]>([]);
   const [master, setMaster] = useState<string>("");
 
-  const color = team === "blue" ? "blue-500" : "red-500";
+  const color = team === "blue" ? "bg-blue-500" : "bg-red-500";
   const teamName = team === "blue" ? "Azul" : "Vermelho";
   
   const handleJoinTeam = () => {
@@ -72,37 +72,39 @@ export default function Team({ team, roomId }: TeamProps) {
     socket.on(`left_${team}_master`, () => {
       console.log("left master ", team);
       
-      setMaster(() => "");
+      setMaster("");
     });
 
   }, [players, team, name, roomId]);
 
   return (
-    <div className={`w-1/5 flex flex-col justify-between gap-4 p-2 bg-${color} text-white rounded`}>
+    <div className={`w-1/6 p-2 ${color} text-white rounded`}>
       <h1 className="text-center">Team {teamName}</h1>
 
-      <div>
-        <div className="flex justify-between">
-          <h2>Players</h2>
+      <div className="flex flex-col justify-between gap-2">
+        <div>
+          <div className="flex flex-col md:flex-row justify-between">
+            <h2>Operadores</h2>
 
-          { teamClient !== team && <button onClick={handleJoinTeam} className="text-sm border p-1 rounded">Entrar</button> }
+            { teamClient !== team && <button onClick={handleJoinTeam} className="text-sm border p-1 rounded">Entrar</button> }
+          </div>
+          
+          <ul>
+            {
+              players.map((player) => (
+                <li key={player.id}>{player.name}</li>
+              ))
+            }
+          </ul>
         </div>
-        
-        <ul>
-          {
-            players.map((player) => (
-              <li key={player.id}>{player.name}</li>
-            ))
-          }
-        </ul>
-      </div>
 
-      <div>
-        <h2>Mestre</h2>
+        <div>
+          <h2>Mestre</h2>
 
-        <p>{master}</p>
+          <p>{master}</p>
 
-        { !master && <button onClick={handleJoinMaster} className="text-sm border p-1 rounded w-full">Entrar como mestre</button> }
+          { !master && <button onClick={handleJoinMaster} className="text-sm border p-1 rounded w-full">Entrar como mestre</button> }
+        </div>
       </div>
     </div>
   );
