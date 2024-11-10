@@ -1,0 +1,15 @@
+ShadowHunter
+DragonSlayer
+MysticMage
+SilentAssassin
+ThunderWarrior
+BlazePhoenix
+NightStalker
+FrostWizard
+IronKnight
+StormBringer
+VenomFang
+DarkSorcerer
+FireDancer
+GhostRider
+LightningBoltE

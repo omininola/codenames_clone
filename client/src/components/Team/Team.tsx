@@ -1,109 +1,89 @@
-"use client"
-
+import { useEffect, useState } from "react";
 import { socket } from "@/utils/socket";
 import { UseAppContext } from "@/context";
-import { useEffect, useState } from "react";
 import { PlayerType } from "@/types";
 
 type TeamProps = {
-  team: "blue" | "red";
+  teamColor: "blue" | "red";
   roomId: string;
 }
 
-export default function Team({ team, roomId }: TeamProps) {
-  const context = UseAppContext();
-  const name = context?.name || socket.id;
-  const setTeam = context?.setTeam;
-  const teamClient = context?.team;
-  const teamMaster = context?.teamMaster;
-  const setTeamMaster = context?.setTeamMaster;
+export default function Team({ teamColor, roomId }: TeamProps) {
+  const { setTeam, team, setTeamMaster } = UseAppContext();
 
   const [players, setPlayers] = useState<PlayerType[]>([]);
   const [master, setMaster] = useState<string>("");
+  const [started, setStarted] = useState<boolean>(false);
+  const [score, setScore] = useState<number>();
 
-  const color = team === "blue" ? "bg-blue-500" : "bg-red-500";
-  const teamName = team === "blue" ? "Azul" : "Vermelho";
+  const classes = teamColor === "blue" ? "bg-blue-500 border-2 border-blue-600" : "bg-red-500 border-2 border-red-600";
+  const scoreColor = teamColor === "blue" ? "text-blue-500" : "text-red-500";
+  const teamName = teamColor === "blue" ? "Azul" : "Vermelho";
   
-  const handleJoinTeam = () => {
-    if (teamClient == team) return;
-
-    const data = {
-      roomId,
-      team: teamClient,
-      name,
-      teamMaster
-    }
-
-    socket.emit(`join_${team}_team`, data);
-    if (name && socket.id) setPlayers([...players, { name, id: socket.id }]);
-    if (setTeamMaster) setTeamMaster(undefined);
-    if (setTeam) setTeam(team);
-  }
-
-  const handleJoinMaster = () => {
-    if (teamMaster == team) return;
-
-    const data = {
-      roomId,
-      team: teamClient,
-      name,
-      teamMaster
-    }
-
-    socket.emit(`join_${team}_master`, data);
-    if (name) setMaster(name);
-    if (setTeam) setTeam(undefined);
-    if (setTeamMaster) setTeamMaster(team);
-  }
+  useEffect(() => {
+    socket.on("game_started", () => setStarted(true));
+  }, []);
 
   useEffect(() => {
-    socket.on(`joined_${team}_team`, (data) => {
-      setPlayers([...players, data]);
+    socket.on(`joined_${teamColor}_master`, (data) => setMaster(data.name));
+    socket.on(`left_${teamColor}_master`, () => setMaster(""));
+    socket.on("update_score", (data) => {
+      if (teamColor == "blue") setScore(data.blue);
+      else setScore(data.red);
     });
+  }, [teamColor]);
 
-    socket.on(`left_${team}_team`, (data) => {
-      setPlayers(players.filter(player => player.id !== data.id));
-    });
+  useEffect(() => {
+    socket.on(`joined_${teamColor}_team`, (data) => setPlayers([...players, data]));
+    socket.on(`left_${teamColor}_team`, (data) => setPlayers(players.filter(player => player.id !== data.id)));
+  }, [players, teamColor]);
 
-    socket.on(`joined_${team}_master`, (data) => {
-      setMaster(data.name);
-    });
+  function handleJoinTeam(){
+    socket.emit(`join_${teamColor}_team`, roomId);
+    if (setTeamMaster) setTeamMaster("none");
+    if (setTeam) setTeam(teamColor);
+  };
 
-    socket.on(`left_${team}_master`, () => {
-      console.log("left master ", team);
-      
-      setMaster("");
-    });
-
-  }, [players, team, name, roomId]);
+  function handleJoinMaster(){
+    socket.emit(`join_${teamColor}_master`, roomId);
+    if (setTeam) setTeam("none");
+    if (setTeamMaster) setTeamMaster(teamColor);
+  };
 
   return (
-    <div className={`w-1/6 p-2 ${color} text-white rounded`}>
-      <h1 className="text-center">Team {teamName}</h1>
+    <div className={`w-1/3 md:w-1/5 text-white`}>
+      <div className="flex items-center justify-around mb-2">
+        <h1 className="text-center font-semibold">Team {teamName}</h1>
+        {score && (
+          <h1 className={`${scoreColor} text-2xl p-2 font-semibold`}>{score}</h1>
+        )}
+      </div>
 
-      <div className="flex flex-col justify-between gap-2">
+      <div className={`${classes} flex flex-col justify-between gap-4 p-2 rounded`}>
         <div>
-          <div className="flex flex-col md:flex-row justify-between">
-            <h2>Operadores</h2>
+          <div className="flex flex-col md:flex-row justify-between gap-1 mb-1">
+            <h2>Players</h2>
 
-            { teamClient !== team && <button onClick={handleJoinTeam} className="text-sm border p-1 rounded">Entrar</button> }
+            {!started && (team !== teamColor) && (
+              <button onClick={handleJoinTeam} className="text-sm border p-1 rounded">Entrar</button>
+            )}
           </div>
           
-          <ul>
-            {
-              players.map((player) => (
-                <li key={player.id}>{player.name}</li>
-              ))
-            }
-          </ul>
+          {players.length > 0 && (
+            <ul className="border rounded px-2 py-1">
+              {players.map((player) => (
+                  <li className="truncate" key={player.id}>{player.name}</li>
+              ))}
+            </ul>
+          )}
         </div>
 
         <div>
-          <h2>Mestre</h2>
-
-          <p>{master}</p>
-
-          { !master && <button onClick={handleJoinMaster} className="text-sm border p-1 rounded w-full">Entrar como mestre</button> }
+          <h2 className="mb-1">Mestre</h2>
+          <p className="truncate">{master}</p>
+          {!started && !master && (
+            <button onClick={handleJoinMaster} className="text-sm border p-1 rounded w-full">Entrar como mestre</button>
+          )}
         </div>
       </div>
     </div>
