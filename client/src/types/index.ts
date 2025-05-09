@@ -1,16 +1,16 @@
 export type PlayerType = {
-  name: string;
-  id: string;
+  id: string
+  name: string
 }
 
 export type WordType = {
-  word: string;
-  team: string;
-  revealed: boolean;
+  word: string
+  team: string
+  revealed: boolean
 }
 
 export type HintType = {
-  hint: string;
-  quantity: number;
-  team: string;
+  hint: string
+  quantity: number
+  team: string
 }

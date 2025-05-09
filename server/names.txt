@@ -13,3 +13,13 @@ DarkSorcerer
 FireDancer
 GhostRider
 LightningBoltE
+lectric
+WindRider
+StoneGolem
+AquaMarine
+SolarFlare
+EarthShaker
+SkyGuardian
+LunarEclipse
+StarChaser
+VoidWalker
